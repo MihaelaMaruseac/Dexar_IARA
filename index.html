@@ -134,11 +134,66 @@
       
     };
     
-    function resultServer(e) {
+    async function resultServer(e) {
         console.log("128", e);
         const result = e.result;
         console.log("130: ", result);
+        alert("txt: "+ result)
+        if(result != ""){
+            await callDex(result.split(' ')[0]);
+        }
     }
+
+    async function callDex(text){
+      try{
+        const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}/json`);
+        console.log(result);
+        alert("result" + JSON.stringify(result))
+        
+        if(result?.data?.definitions?.length>0){
+          // am gasit definitie
+          const scene = document.getElementById("scene");
+          const entity = document.createElement("a-entity");
+          entity.innerHTML = result.data.definitions[0].htmlRep;  
+          entity.classList.add('centered')
+          scene.appendChild(entity);
+        
+          setTimeout(()=> {scene.removeChild(entity)}, 5000)
+          
+        } else {
+          alert("not found")
+         // call fara json (poate gaseste ceva) 
+          const result2 = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}`);
+          console.log(result2.data)
+          
+           const scene = document.getElementById("scene");
+          const entity = document.createElement("a-entity");
+          entity.innerHTML = result2.data;  
+          entity.classList.add('centered')
+          scene.appendChild(entity);
+        
+          // setTimeout(()=> {scene.removeChild(entity)}, 5000)
+        }
+      } catch(err){
+        alert("not found")
+        try{
+          const result2 = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}`);
+          console.log("172:",result2.data)
+          
+            const scene = document.getElementById("scene");
+          const entity = document.createElement("a-entity");
+          entity.classList.add('centered')
+          entity.innerHTML = result2.data;     
+          scene.appendChild(entity);
+        
+          // setTimeout(()=> {scene.removeChild(entity)}, 5000)
+        } catch(err2){
+          console.log("174:",err2)
+        }
+      }
+    }
+
+
 
     
     
@@ -167,7 +222,7 @@
       font-weight: bold;
     }
     
-    .word-box{
+    .centered{
       width: 155px;
       height: 45px;
       position: absolute;
@@ -184,9 +239,9 @@
     <div class="buttons">
       <button class="take-word-button">Capture the unknown word!</button>
     </div>
-    <div class="word-box" style= "border: 4px solid green" id='box'>
+    <div class="centered" style= "border: 4px solid green" id='box'>
     </div>
-    <a-scene embedded arjs vr-mode-ui="enabled: false;">
+    <a-scene embedded arjs vr-mode-ui="enabled: false;" id="scene">
       <a-marker preset="hiro">
         <a-entity
           position="0 0 0"

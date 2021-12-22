@@ -192,13 +192,15 @@
           entity.visible = true;
           entity.innerHTML = "<img src=\"./sad1.jpg\" width=\"400px\" height=\"150px\">";
           console.log("192", entity)
-          // const img = document.createElement("img");
-          // img.src = './sad1.jpg';
+          const img = document.createElement("img");
+          img.src = './sad1.jpg';
+          img.classList.add('centered')
           // console.log("195", img)
 
           // entity.appendChild(img);
           entity.classList.add('centered')
-          scene.appendChild(entity);        
+          scene.appendChild(entity);    
+          scene.appendChild(img);    
           // setTimeout(()=> {scene.removeChild(entity)}, 5000)
         }
     }

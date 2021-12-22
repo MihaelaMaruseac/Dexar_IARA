@@ -189,18 +189,18 @@
           const scene = document.getElementById("scene");
           console.log("190", scene)
           const entity = document.createElement("a-entity");
-          entity.visible = true;
-          entity.innerHTML = "<img src=\"./sad1.jpg\" width=\"400px\" height=\"150px\">";
+          // entity.innerHTML = "<img src=\"./sad1.jpg\" width=\"400px\" height=\"150px\">";
+          entity.innerHTML = "IMAGINE SAD"
           console.log("192", entity)
-          const img = document.createElement("img");
-          img.src = './sad1.jpg';
-          img.classList.add('centered')
+          // const img = document.createElement("img");
+          // img.src = './sad1.jpg';
+          // img.classList.add('centered')
           // console.log("195", img)
 
           // entity.appendChild(img);
           entity.classList.add('centered')
           scene.appendChild(entity);    
-          scene.appendChild(img);    
+          // scene.appendChild(img);    
           // setTimeout(()=> {scene.removeChild(entity)}, 5000)
         }
     }

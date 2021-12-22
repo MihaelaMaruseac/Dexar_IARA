@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<head> 
+<!--<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">-->
+<!--</head>-->
   <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -27,12 +30,63 @@
       const stream = await navigator.mediaDevices.getUserMedia({
           video: {
               facingMode: 'environment',
-              zoom: false
-              // aspectRatio: { exact: 0.7777777778 }
+              // deviceId: 'd964cdb222e31562074b4008b509fbb32a0ddbde61d0a1638fd23b4569552c7a
           },
           audio: false
       })
+      // alert(stream)
 	    webcamElement.srcObject = stream;
+      
+    //   const devices = await navigator.mediaDevices.enumerateDevices() 
+    //   alert(devices)
+	   
+	   
+	   //var userMediaConstraints = {
+    //   audio: false,
+    //   video: {
+    //     facingMode: 'environment',
+    //     // width: {
+    //     // ideal: _this.parameters.sourceWidth,
+    //     // // min: 1024,
+    //     // // max: 1920
+    //     // },
+    //     width: window.innerWidth,
+    //     height: window.innerHeight
+    //     // height: {
+    //     // ideal: _this.parameters.sourceHeight,
+    //     // // min: 776,
+    //     // // max: 1080
+    //     // }
+    //   }
+    // }
+    // alert(JSON.stringify(userMediaConstraints))
+    
+    // let stream;
+        
+    //     // CUSTOM CODE START
+    //     var backCam2 = devices.filter(d=>{
+    //     return d.label && d.label == "camera2 0, facing back";
+    //     })
+    //     alert(JSON.stringify(backCam2))
+    //     if (backCam2.length) {
+    //     userMediaConstraints.video.deviceId = backCam2[0].deviceId
+    //     stream = await navigator.mediaDevices.getUserMedia(userMediaConstraints)
+    //     } else {
+    //       stream = await navigator.mediaDevices.getUserMedia({
+    //       video: {
+    //           facingMode: 'environment'
+    //       },
+    //       audio: false
+    //       })
+    //     }
+    //     // CUSTOM CODE END
+    //     // alert(JSON.stringify(userMediaConstraints))
+
+    //   const webcamElement = document.getElementById('webcam');
+    //   // const stream = await navigator.mediaDevices.getUserMedia(userMediaConstraints)
+    //   alert(JSON.stringify(stream))
+	   // webcamElement.srcObject = stream;
+	   // webcamElement.play()
     }
           
     window.onload = async function () {
@@ -91,42 +145,22 @@
 
     
     const capture = async () => {      
-
-      // const screenshotTarget = document.body;
       const webcamElement = document.getElementById('webcam');
-      console.log("97: ", window.innerWidth, window.innerHeight);
       const canvas = document.getElementById("canvas");
-      
-      
-      const box= document.getElementById('box');
-      console.log("101: ", box, box.getBoundingClientRect())
-      const position = box.getBoundingClientRect();
-      // canvas.getContext('2d').drawImage(webcamElement, position.left,position.top, 155,45,     0, 0, canvas.width, canvas.height);
-   	  canvas.getContext('2d').drawImage(webcamElement, window.innerWidth/2 -10  , window.innerHeight/2 - 55, 155,45,     0, 0, canvas.width, canvas.height);
-   	 
+      canvas.getContext('2d').drawImage(webcamElement, window.innerWidth/2 -10, window.innerHeight/2 - 55, 155,45, 0, 0, canvas.width, canvas.height);
    	  let image_data_url = canvas.toDataURL('image/jpeg');
-
-   	// data url of the image
-   	console.log("124: ", image_data_url);
-
-
-      // html2canvas(screenshotTarget).then(async (canvas) => {
-          var messagesRef = await firebase.database().ref('Checking');
-          // const base64image = canvas.toDataURL("image/png");
-          await uploadimage(image_data_url);
+      await uploadimage(image_data_url);
           alert("Uploaded image")
           
           var url = 'https://script.google.com/macros/s/AKfycbxebhtQBjtNfGMO_3Bium-SuIB4Bs6YLxamDwOIgfvC/exec?callback=resultServer&caller=Mihaela';
           // Make an AJAX call to Google Script
           try{
-            console.log("112")
             const result = await jQuery.ajax({
               crossDomain: true,
               url: url,
               method: "GET",
               dataType: "jsonp"
             });
-            console.log("119")
           } catch (err) {
             console.log("97: ", err);
           }
@@ -135,17 +169,35 @@
     };
     
     async function resultServer(e) {
-        console.log("128", e);
-        const result = e.result;
-        console.log("130: ", result);
+        const result = e.result.split(' ');
+        let found = false;
         alert("txt: "+ result)
-        if(result != ""){
-            await callDex(result.split(' ')[0]);
+        var regExp = /[a-zA-Z]/g;
+
+        for(let i=0; i<result.length;i++){
+          if(regExp.test(result[i])){
+            await callDex(result[i]);
+            found = true;
+            break
+          }
+        }
+        
+        if(!found){
+          // sad 
+          const scene = document.getElementById("scene");
+          const entity = document.createElement("a-entity");
+          const img = document.createElement("img");
+          img.src = 'sad.gif';
+
+          entity.appendChild(img);
+          scene.appendChild(entity);        
+          setTimeout(()=> {scene.removeChild(entity)}, 5000)
         }
     }
 
     async function callDex(text){
       try{
+        alert("TEXT: "+text)
         const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}/json`);
         console.log(result);
         alert("result" + JSON.stringify(result))
@@ -233,6 +285,7 @@
     }
     
   </style>
+  </head>
   <body style="margin : 0px; overflow: hidden;">
   <canvas id="canvas" width="155" height="45" style="display: none;"></canvas>
     <video id="webcam" width="1280" height="720" autoplay playsinline style="display: none;"></video>

@@ -187,9 +187,12 @@
         if(!found){
           // sad 
           const scene = document.getElementById("scene");
+          console.log("190", scene)
           const entity = document.createElement("a-assets");
+          console.log("192", entity)
           const img = document.createElement("img");
           img.src = './sad1.jpg';
+          console.log("195", img)
 
           entity.appendChild(img);
           entity.classList.add('centered')

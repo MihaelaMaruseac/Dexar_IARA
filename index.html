@@ -188,13 +188,14 @@
           // sad 
           const scene = document.getElementById("scene");
           console.log("190", scene)
-          const entity = document.createElement("a-assets");
+          const entity = document.createElement("a-entity");
+          entity.innerHTML = "<img src=\"./sad1.jpg\" width=\"400px\" height=\"150px\">";
           console.log("192", entity)
-          const img = document.createElement("img");
-          img.src = './sad1.jpg';
-          console.log("195", img)
+          // const img = document.createElement("img");
+          // img.src = './sad1.jpg';
+          // console.log("195", img)
 
-          entity.appendChild(img);
+          // entity.appendChild(img);
           entity.classList.add('centered')
           scene.appendChild(entity);        
           // setTimeout(()=> {scene.removeChild(entity)}, 5000)

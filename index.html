@@ -187,11 +187,11 @@
         if(!found){
           // sad 
           const scene = document.getElementById("scene");
-          const entity = document.createElement("a-box");
-          // const img = document.createElement("img");
-          entity.src = './sad.gif';
+          const entity = document.createElement("a-assets");
+          const img = document.createElement("img");
+          img.src = './sad1.jpg';
 
-          // entity.appendChild(img);
+          entity.appendChild(img);
           scene.appendChild(entity);        
           setTimeout(()=> {scene.removeChild(entity)}, 5000)
         }

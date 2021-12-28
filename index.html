@@ -123,7 +123,7 @@
       canvas.getContext('2d').drawImage(webcamElement, window.innerWidth/2 -10, window.innerHeight/2 - 55, 155,45, 0, 0, canvas.width, canvas.height);
    	  let image_data_url = canvas.toDataURL('image/jpeg');
       await uploadimage(image_data_url);
-      // alert("Uploaded image")
+      alert("Uploaded image")
       
       var url = 'https://script.google.com/macros/s/AKfycbxebhtQBjtNfGMO_3Bium-SuIB4Bs6YLxamDwOIgfvC/exec?callback=resultServer&caller=Mihaela';
       // Make an AJAX call to Google Script
@@ -171,7 +171,6 @@
       try{
         alert("TEXT: "+text)
         const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}/json`);
-        alert("result" + JSON.stringify(result))
         
         if(result?.data?.definitions?.length>0){
           // am gasit definitie
@@ -182,6 +181,7 @@
           const td = document.createElement("td")
           const div = document.createElement("div")
           div.innerHTML = result.data.definitions[0].htmlRep;
+          div.style = "max-height: 180px"
           div.classList.add('scrollable')
           td.appendChild(div)
           tabel.appendChild(td);

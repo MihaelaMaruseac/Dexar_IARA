@@ -3,7 +3,6 @@
 <head> 
 <meta charset="UTF-8">
 <!--<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">-->
-<!--</head>-->
   <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -13,18 +12,18 @@
   <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase.js"></script>
   <script>
         
-      const firebaseConfig = {
-        apiKey: "AIzaSyD4G7cQzr3UDURc72xoFEPC3KWECzlpgg0",
-        authDomain: "dexar-6c0bd.firebaseapp.com",
-        databaseURL: "https://dexar-6c0bd-default-rtdb.europe-west1.firebasedatabase.app/",
-        projectId: "dexar-6c0bd",
-        storageBucket: "dexar-6c0bd.appspot.com",
-        messagingSenderId: "537242336725",
-        appId: "1:537242336725:web:6964ec85ac75fab503915c",
-        measurementId: "G-2F7NKSVTF0"
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4G7cQzr3UDURc72xoFEPC3KWECzlpgg0",
+      authDomain: "dexar-6c0bd.firebaseapp.com",
+      databaseURL: "https://dexar-6c0bd-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "dexar-6c0bd",
+      storageBucket: "dexar-6c0bd.appspot.com",
+      messagingSenderId: "537242336725",
+      appId: "1:537242336725:web:6964ec85ac75fab503915c",
+      measurementId: "G-2F7NKSVTF0"
+    };
  
-          firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
           
     const openWebcam = async () => {
       const webcamElement = document.getElementById('webcam');
@@ -89,16 +88,7 @@
 	   // webcamElement.srcObject = stream;
 	   // webcamElement.play()
     }
-          
-    window.onload = async function () {
-      await openWebcam()
-      document
-        .querySelector(".take-word-button")
-        .addEventListener("click", function () {
-          capture();
-        });
-    };
-    
+
     const b64toBlob = (b64Data, contentType = 'image/png', sliceSize = 512) => {
       const byteCharacters = atob(b64Data);
       const byteArrays = [];
@@ -124,64 +114,49 @@
       var storage = firebase.storage();
       const file = b64toBlob(base64.split(';base64,')[1]);
       var storageref=storage.ref();
-      var thisref=storageref.child("image/png").child("abc.png").put(file);
+      var thisref= await storageref.child("image/png").child("abc.png").put(file);
     }
 
-    // Function to get form values
-    function getInputVal(id){
-      return document.getElementById(id).value;
-    }
-        
-    // Save message to firebase database
-    function saveMessage(url){
-      var newMessageRef = messagesRef.push();
-      newMessageRef.set({
-      imageurl:url,
-      });
-    }
-
-    
     const capture = async () => {      
       const webcamElement = document.getElementById('webcam');
       const canvas = document.getElementById("canvas");
       canvas.getContext('2d').drawImage(webcamElement, window.innerWidth/2 -10, window.innerHeight/2 - 55, 155,45, 0, 0, canvas.width, canvas.height);
    	  let image_data_url = canvas.toDataURL('image/jpeg');
       await uploadimage(image_data_url);
-          alert("Uploaded image")
-          
-          var url = 'https://script.google.com/macros/s/AKfycbxebhtQBjtNfGMO_3Bium-SuIB4Bs6YLxamDwOIgfvC/exec?callback=resultServer&caller=Mihaela';
-          // Make an AJAX call to Google Script
-          try{
-            const result = await jQuery.ajax({
-              crossDomain: true,
-              url: url,
-              method: "GET",
-              dataType: "jsonp"
-            });
-          } catch (err) {
-            console.log("97: ", err);
-          }
-      // });
+      // alert("Uploaded image")
       
+      var url = 'https://script.google.com/macros/s/AKfycbxebhtQBjtNfGMO_3Bium-SuIB4Bs6YLxamDwOIgfvC/exec?callback=resultServer&caller=Mihaela';
+      // Make an AJAX call to Google Script
+      try{
+        const result = await jQuery.ajax({
+          crossDomain: true,
+          url: url,
+          method: "GET",
+          dataType: "jsonp"
+        });
+      } catch (err) {
+        // console.log("97: ", err);
+      }      
     };
     
     async function resultServer(e) {
-        const result = e.result.split(' ');
-        let found = false;
-        var regExp = /[a-zA-Z]/g;
+      const result = e.result.split(' ');
+      let found = false;
+      var regExp = /[a-zA-Z]/g;
 
-        for(let i=0; i<result.length;i++){
-          if(regExp.test(result[i])){
-            await callDex(result[i]);
-            found = true;
-            break
-          }
+      for(let i=0; i<result.length;i++){
+        if(regExp.test(result[i])){
+          await callDex(result[i]);
+          found = true;
+          break
         }
-        
-        if(!found){
-         showSad();
-        }
+      }
+      
+      if(!found){
+        showSad();
+      }
     }
+
     function showSad(){
       const scene = document.getElementById("scene");
       const entity = document.createElement("a-entity");
@@ -196,7 +171,6 @@
       try{
         alert("TEXT: "+text)
         const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dexonline.ro/definitie/${text}/json`);
-        console.log(result);
         alert("result" + JSON.stringify(result))
         
         if(result?.data?.definitions?.length>0){
@@ -223,11 +197,7 @@
       } catch(err){
         showSad()
       }
-    }
-
-
-
-    
+    }   
     
   </script>
   <style>
@@ -274,11 +244,11 @@
     
   </style>
   </head>
-  <body style="margin : 0px; overflow: hidden;">
+  <body style="margin : 0px; overflow: hidden;" onload="openWebcam()">
   <canvas id="canvas" width="155" height="45" style="display: none;"></canvas>
     <video id="webcam" width="1280" height="720" autoplay playsinline style="display: none;"></video>
     <div class="buttons">
-      <button class="take-word-button">Capture the unknown word!</button>
+      <button class="take-word-button" onclick="capture()">Capture the unknown word!</button>
     </div>
     <div class="centered" style= "border: 4px solid green" id='box'>
     </div>
